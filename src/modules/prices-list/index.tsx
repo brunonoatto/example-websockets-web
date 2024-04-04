@@ -25,21 +25,27 @@ export default function PriecesList({ coin }: TPricesListProps) {
     ]);
   };
 
+  const handleWebSocketAction = (event, action) =>
+    console.log(action, { event });
+
   useEffect(() => {
     setMessages([]);
     const socket = new WebSocket(
       `wss://fstream.binance.com/stream?streams=${coin.toLocaleLowerCase()}@markPrice`
     );
 
-    socket.addEventListener("open", (event) => console.log("OPEN!", { event }));
-    socket.addEventListener("error", (event) =>
-      console.log("-------ERROR!", { event })
-    );
+    const actionOpen = (e) => handleWebSocketAction(e, "OPEN!");
+    const actionError = (e) => handleWebSocketAction(e, "ERROR!");
 
+    socket.addEventListener("open", actionOpen);
+    socket.addEventListener("error", actionError);
     socket.addEventListener("message", onMessage);
 
     return () => {
+      socket.removeEventListener("open", actionOpen);
+      socket.removeEventListener("error", actionError);
       socket.removeEventListener("message", onMessage);
+      socket.close();
     };
   }, [coin]);
 
