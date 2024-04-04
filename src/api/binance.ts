@@ -13,6 +13,6 @@ export const listCoins = async () => {
   const { data } = await axios.get<TListCoinResponse>(
     "https://api.binance.com/api/v3/exchangeInfo"
   );
-  console.log({ data });
+
   return sortAsc(data.symbols, "symbol");
 };
