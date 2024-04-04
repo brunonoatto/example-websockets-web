@@ -31,9 +31,10 @@ export default function PriecesList({ coin }: TPricesListProps) {
       `wss://fstream.binance.com/stream?streams=${coin.toLocaleLowerCase()}@markPrice`
     );
 
-    console.log({ socket });
-
     socket.addEventListener("open", (event) => console.log("OPEN!", { event }));
+    socket.addEventListener("error", (event) =>
+      console.log("-------ERROR!", { event })
+    );
 
     socket.addEventListener("message", onMessage);
 
